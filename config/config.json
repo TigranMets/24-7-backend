@@ -1,0 +1,18 @@
+{
+  "development": {
+    "username": "ba33c0fca4f59b",
+    "password": "9d574fae",
+    "database": "heroku_639aeef2b8dd747",
+    "host": "us-cdbr-east-06.cleardb.net",
+    "port": 3306,
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "ba33c0fca4f59b",
+    "password": "9d574fae",
+    "database": "heroku_639aeef2b8dd747",
+    "host": "us-cdbr-east-06.cleardb.net",
+    "port": 3306,
+    "dialect": "mysql"
+  }
+}
