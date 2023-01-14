@@ -83,7 +83,6 @@ class NewsService extends BaseService {
                 message: "Created successfully"
             })
         } catch (error) {
-            console.log(error)
             return this.serverErrorResponse();
         }
     }
@@ -238,7 +237,7 @@ class NewsService extends BaseService {
                 message: "News not found"
             })
 
-            await this.viewsProvider.handleNewsViews({newsId: news.id, ip: req.ip})
+            await this.viewsProvider.handleNewsViews({ newsId: news.id, ip: req.socket.remoteAddress })
 
             return this.response({data: news})
         } catch (error) {
@@ -275,16 +274,18 @@ class NewsService extends BaseService {
                 message: "News not found"
             })
 
-        
-            if (news.author.postsCount - 1 <= 0) {
-                await this.authorModel.destroy(
-                    {where: {id: news.author.id}}
-                )
-            } else {
-                await this.authorModel.update(
-                    {postsCount: news.author.postsCount - 1},
-                    {where: {id: news.author.id}}
-                )
+
+            if (news.author) {
+                if (news.author.postsCount - 1 <= 0) {
+                    await this.authorModel.destroy(
+                        {where: {id: news.author.id}}
+                    )
+                } else {
+                    await this.authorModel.update(
+                        {postsCount: news.author.postsCount - 1},
+                        {where: {id: news.author.id}}
+                    )
+                }
             }
 
             await this.newsModel.destroy({
@@ -302,6 +303,7 @@ class NewsService extends BaseService {
 
             return this.response({message: "News deleted successfully"})
         } catch (error) {
+            console.log(error)
             return this.serverErrorResponse();
         }
     }
