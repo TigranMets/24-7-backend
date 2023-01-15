@@ -97,6 +97,13 @@ class NewsService extends BaseService {
 
             const news = await this.newsProvider.findById({id})
 
+            if(!news) 
+                return this.response({
+                    message: 'News not found',
+                    statusCode: 404,
+                    status: false
+                })
+
             if (!parseCategories?.length)
                 return this.response({
                     status: false,
@@ -160,7 +167,6 @@ class NewsService extends BaseService {
         try {
             const {category, page, limit} = req.query;
             let news = []
-
             if (category) {
                 let attributes = ['id', 'title', 'text', 'image', 'icon', 'imageAlt', 'createdAt']
                 const parseCategory = category.toLowerCase()
@@ -303,7 +309,6 @@ class NewsService extends BaseService {
 
             return this.response({message: "News deleted successfully"})
         } catch (error) {
-            console.log(error)
             return this.serverErrorResponse();
         }
     }
