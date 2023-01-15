@@ -59,7 +59,8 @@ class NewsProvider {
     }
 
     async findNewsByCategory({page, limit, category, include = true, attributes= ['id', 'title', 'text', 'image', 'createdAt']}) {
-        const parsedRel = include ? [{
+        console.log(include)
+        const parsedRel = [{
             model: Categories,
             as: 'categories',
             where: {category: category.toLowerCase()},
@@ -70,9 +71,8 @@ class NewsProvider {
         }, {
             model: Authors,
             as: 'author'
-        }
-        ] : []
-
+        }]
+        
         const response = await News.findAndCountAll({
             ...paginate({
                 currentPage: page,
@@ -87,9 +87,19 @@ class NewsProvider {
                 attributes: []
             }
         })
+        
         response.news = response?.rows
         delete response.rows
 
+        if(!include) {
+            response.news.forEach(element => {
+                if (element.dataValues.categories)
+                    delete element.dataValues.categories
+                if (element.dataValues.author) 
+                    delete element.dataValues.author
+            });
+        }   
+        
         return response
     }
 }
